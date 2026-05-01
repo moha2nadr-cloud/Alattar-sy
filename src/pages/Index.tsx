@@ -132,7 +132,7 @@ export default function Index() {
               {filtered.map((product) => {
                 const availability = product.availability ?? "available";
                 return (
-                  <Link to={`/product/${product.id}`} key={product.id} className="group block overflow-hidden rounded-[1rem] border border-primary/15 bg-card shadow-card-soft transition-all hover:-translate-y-1 hover:shadow-card-hover data-[mode=list]:flex data-[mode=list]:items-center" data-mode={productDisplayMode}>
+                  <Link to={`/product/${product.id}`} key={product.id} className="group block overflow-hidden rounded-[1rem] border border-primary/15 bg-white shadow-card-soft transition-all hover:-translate-y-1 hover:shadow-card-hover data-[mode=list]:flex data-[mode=list]:items-center" data-mode={productDisplayMode}>
                     <div className="flex aspect-[4/3] w-full items-center justify-center bg-primary/10 text-primary data-[mode=list]:h-24 data-[mode=list]:w-28 data-[mode=list]:shrink-0 data-[mode=compact]:hidden" data-mode={productDisplayMode}>
                       {product.imageData ? <img loading="lazy" decoding="async" src={product.imageData} alt={product.name} className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 opacity-40" />}
                     </div>
