@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SiteShell } from "@/components/herbal/SiteShell";
 import { availabilityLabels } from "@/data/herbalShop";
@@ -22,13 +22,20 @@ const availabilityClasses: Record<string, string> = {
 export default function Index() {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const { config } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
   const visibleSlides = slides.filter((slide) => slide.published && slide.imageData);
-  const filtered = useMemo(() => publishedProducts.filter((p) => !activeCat || p.categoryId === activeCat), [activeCat, publishedProducts]);
-  const productLayoutClass = productDisplayMode === "list" ? "grid grid-cols-1 gap-3" : productDisplayMode === "compact" ? "grid grid-cols-2 gap-2 md:grid-cols-5" : `grid gap-4 md:gap-5 ${gridCols[settings.desktopProductsPerRow] ?? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}`;
 
+  const filtered = useMemo(() => publishedProducts.filter((p) => {
+    const matchCat = !activeCat || p.categoryId === activeCat;
+    const q = searchQuery.trim().toLowerCase();
+    const matchSearch = !q || p.name.toLowerCase().includes(q) || (p.description ?? "").toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  }), [activeCat, publishedProducts, searchQuery]);
+
+  const productLayoutClass = productDisplayMode === "list" ? "grid grid-cols-1 gap-3" : productDisplayMode === "compact" ? "grid grid-cols-2 gap-2 md:grid-cols-5" : `grid gap-4 md:gap-5 ${gridCols[settings.desktopProductsPerRow] ?? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}`;
   const intervalMs = Math.max(1000, Number(settings.sliderInterval) || 3000);
   const transition = settings.sliderTransition ?? "fade";
 
@@ -45,6 +52,7 @@ export default function Index() {
       <div className="mx-auto max-w-6xl px-6 pb-16">
         <div className="botanical-sprig botanical-sprig-left" aria-hidden />
         <div className="botanical-sprig botanical-sprig-right" aria-hidden />
+
         {settings.showSlider && (
           <section className="mt-3 overflow-hidden rounded-[1.5rem] border border-primary/15 bg-primary/5 shadow-card-soft animate-scale-in">
             {visibleSlides.length ? (
@@ -53,16 +61,10 @@ export default function Index() {
                   const isActive = index === activeSlide;
                   const baseClass = "absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out";
                   let dynamicClass = "";
-                  if (transition === "fade") {
-                    dynamicClass = isActive ? "opacity-100" : "opacity-0";
-                  } else if (transition === "slide") {
-                    dynamicClass = isActive ? "translate-x-0 opacity-100" : "translate-x-full opacity-0";
-                  } else {
-                    dynamicClass = isActive ? "scale-100 opacity-100" : "scale-110 opacity-0";
-                  }
-                  return (
-                    <img loading="lazy" decoding="async" key={slide.id} src={slide.imageData} alt="" className={`${baseClass} ${dynamicClass}`} />
-                  );
+                  if (transition === "fade") dynamicClass = isActive ? "opacity-100" : "opacity-0";
+                  else if (transition === "slide") dynamicClass = isActive ? "translate-x-0 opacity-100" : "translate-x-full opacity-0";
+                  else dynamicClass = isActive ? "scale-100 opacity-100" : "scale-110 opacity-0";
+                  return <img loading="lazy" decoding="async" key={slide.id} src={slide.imageData} alt="" className={`${baseClass} ${dynamicClass}`} />;
                 })}
                 <div className="absolute inset-0 bg-primary pointer-events-none" style={{ opacity: Number(settings.slideOverlayOpacity || 0) / 100 }} />
               </div>
@@ -79,8 +81,32 @@ export default function Index() {
           </section>
         )}
 
+        {/* شريط البحث */}
+        <section className="mt-10 animate-fade-up">
+          <div className="relative">
+            <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 pointer-events-none" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ابحث عن منتج..."
+              dir="rtl"
+              className="w-full rounded-2xl border border-primary/20 bg-primary/5 py-3 pr-12 pl-10 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 hover:text-primary transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </section>
+
         {settings.showCategoriesSection && (
-          <section className="mt-12 animate-fade-up">
+          <section className="mt-6 animate-fade-up">
             <h2 className="mb-5 text-2xl font-bold text-primary">{settings.categoriesTitle}</h2>
             <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <button type="button" onClick={() => setActiveCat(null)} className="shrink-0 rounded-full border border-primary px-5 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground" data-active={activeCat === null}>
@@ -99,7 +125,7 @@ export default function Index() {
           <h2 className="mb-6 text-2xl font-bold text-primary">{settings.productsTitle}</h2>
           {filtered.length === 0 ? (
             <div className="rounded-[1.5rem] border-2 border-dashed border-primary/20 px-6 py-12 text-center text-lg text-primary">
-              {settings.emptyProductsMessage}
+              {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : settings.emptyProductsMessage}
             </div>
           ) : (
             <div className={productLayoutClass}>
