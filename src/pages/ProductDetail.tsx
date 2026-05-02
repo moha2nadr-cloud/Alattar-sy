@@ -55,7 +55,11 @@ export default function ProductDetail() {
               <p className="text-xl font-bold text-accent">{product.price} {product.weight && `— ${product.weight}`}</p>
             )}
             {product.description && (
-              <p className="text-base leading-8 text-primary/80 whitespace-pre-wrap">{product.description}</p>
+              <div className="text-base leading-8 text-primary/80">
+                {product.description.split("\n").map((line, i) => (
+                  line.trim() === "" ? <br key={i} /> : <p key={i} className="mb-1">{line}</p>
+                ))}
+              </div>
             )}
             {product.note && <p className="rounded-xl bg-primary/5 p-3 text-sm leading-7 text-primary/75">{product.note}</p>}
             <Button asChild size="lg" className="mt-2 w-full md:w-fit" disabled={availability === "unavailable"}>
