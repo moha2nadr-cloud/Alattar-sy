@@ -85,7 +85,7 @@ function Field({ label, value, onChange, multiline, type = "text" }: { label: st
     <label className="space-y-2 text-sm font-semibold text-primary">
       <span>{label}</span>
       {multiline ? (
-        <Textarea value={value} onChange={(event) => onChange(event.target.value)} className="border-primary/20 text-primary" />
+        <Textarea value={value} onChange={(event) => onChange(event.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && e.shiftKey) { e.stopPropagation(); } }} className="border-primary/20 text-primary" />
       ) : (
         <Input type={type} value={value} onChange={(event) => onChange(event.target.value)} className="border-primary/20 text-primary" />
       )}
@@ -413,6 +413,7 @@ export default function AdminDashboard() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newProductOpen, setNewProductOpen] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() =>
     typeof window !== "undefined" && window.sessionStorage.getItem(ADMIN_AUTH_KEY) === "true"
   );
@@ -659,8 +660,21 @@ export default function AdminDashboard() {
       </div>
       <div className="fixed bottom-4 left-4 z-50 flex gap-2 rounded-2xl border border-primary/15 bg-card p-2 shadow-card-soft">
         <Button type="button" onClick={handleSave}><Save className="ml-2 h-4 w-4" />حفظ التغييرات</Button>
-        <Button type="button" variant="outline" onClick={async () => { await resetConfig(); }}>إعادة ضبط</Button>
+        <Button type="button" variant="outline" onClick={() => setResetConfirmOpen(true)}>إعادة ضبط</Button>
       </div>
+
+      <Dialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
+        <DialogContent className="bg-card sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-primary">تأكيد إعادة الضبط</DialogTitle>
+            <DialogDescription>سيتم حذف جميع البيانات والمنتجات والإعدادات بشكل نهائي. هل أنت متأكد؟</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-row-reverse gap-2 sm:flex-row-reverse">
+            <Button type="button" variant="destructive" onClick={async () => { await resetConfig(); setResetConfirmOpen(false); toast({ title: "تم إعادة الضبط" }); }}>نعم، إعادة الضبط</Button>
+            <Button type="button" variant="outline" onClick={() => setResetConfirmOpen(false)}>إلغاء</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <NewProductDialog
         open={newProductOpen}
