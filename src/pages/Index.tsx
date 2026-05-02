@@ -23,7 +23,7 @@ export default function Index() {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const { config } = useShopConfig();
+  const { config, loaded } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
   const visibleSlides = slides.filter((slide) => slide.published && slide.imageData);
@@ -74,13 +74,13 @@ export default function Index() {
           </section>
         )}
 
-        {settings.aboutText && (
+        {loaded && settings.aboutText && (
           <section className="mt-10 text-center text-primary animate-fade-up">
             <h2 className="text-xl font-extrabold">{settings.aboutTitle}</h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">{settings.aboutText}</p>
           </section>
         )}
-        {!settings.aboutText && (
+        {!loaded && (
           <section className="mt-10 text-center text-primary animate-fade-up">
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
           </section>
