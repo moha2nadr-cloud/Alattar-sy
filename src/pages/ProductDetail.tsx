@@ -56,7 +56,7 @@ export default function ProductDetail() {
             )}
             {product.description && (
               <div className="text-base leading-8 text-primary/80">
-                {product.description.split("\n").map((line, i) => (
+                {product.description.split(/\r?\n/).map((line, i) => (
                   line.trim() === "" ? <br key={i} /> : <p key={i} className="mb-1">{line}</p>
                 ))}
               </div>
