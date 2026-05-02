@@ -26,6 +26,7 @@ export default function Index() {
   const [availFilter, setAvailFilter] = useState<string>("all");
   const [sortOrder, setSortOrder] = useState<string>("default");
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   const { config, loaded } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
@@ -101,44 +102,57 @@ export default function Index() {
           </section>
         )}
 
-        {/* شريط البحث */}
+        {/* شريط البحث + أيقونة الفلتر */}
         <section className="mt-10 animate-fade-up">
-          <div className="relative">
-            <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 pointer-events-none" />
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ابحث عن منتج..."
-              dir="rtl"
-              className="w-full rounded-2xl border border-primary/20 bg-primary/5 py-3 pr-12 pl-10 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all"
-            />
-            {searchQuery && (
-              <button type="button" onClick={() => setSearchQuery("")} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 hover:text-primary transition-colors">
-                <X className="h-4 w-4" />
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 pointer-events-none" />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="ابحث عن منتج..."
+                dir="rtl"
+                className="w-full rounded-2xl border border-primary/20 bg-primary/5 py-3 pr-12 pl-10 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all"
+              />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery("")} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 hover:text-primary transition-colors">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowFilter((v) => !v)}
+                className={`h-full rounded-2xl border px-4 flex items-center gap-2 text-sm font-semibold transition-all ${showFilter || availFilter !== "all" || sortOrder !== "default" ? "bg-primary text-white border-primary" : "border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"}`}
+              >
+                <ArrowUpDown className="h-4 w-4" />
+                تصفية
               </button>
-            )}
-          </div>
-        </section>
-
-        {/* فلتر التوفر + الترتيب */}
-        <section className="mt-4 flex flex-wrap gap-2 animate-fade-up">
-          <div className="flex gap-1 rounded-xl border border-primary/20 bg-primary/5 p-1">
-            {[["all","الكل"],["available","متوفر"],["limited","كمية محدودة"]].map(([val, label]) => (
-              <button key={val} type="button" onClick={() => setAvailFilter(val)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
-                {label}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-1 rounded-xl border border-primary/20 bg-primary/5 p-1">
-            <ArrowUpDown className="h-3 w-3 text-primary/50 mr-1" />
-            {[["default","الافتراضي"],["alpha","أ-ي"],["alpha-desc","ي-أ"]].map(([val, label]) => (
-              <button key={val} type="button" onClick={() => setSortOrder(val)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
-                {label}
-              </button>
-            ))}
+              {showFilter && (
+                <div className="absolute left-0 top-full mt-2 z-50 w-56 rounded-2xl border border-primary/15 bg-white shadow-lg p-3" dir="rtl">
+                  <p className="text-xs font-bold text-primary/50 mb-2">حسب التوفر</p>
+                  <div className="flex flex-col gap-1 mb-3">
+                    {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
+                      <button key={val} type="button" onClick={() => setAvailFilter(val)}
+                        className={`rounded-xl px-3 py-2 text-sm text-right font-medium transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs font-bold text-primary/50 mb-2">الترتيب</p>
+                  <div className="flex flex-col gap-1">
+                    {[["default","الافتراضي"],["alpha","أ — ي"],["alpha-desc","ي — أ"]].map(([val, label]) => (
+                      <button key={val} type="button" onClick={() => setSortOrder(val)}
+                        className={`rounded-xl px-3 py-2 text-sm text-right font-medium transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
@@ -198,7 +212,7 @@ export default function Index() {
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-20 left-4 z-50 rounded-full bg-primary p-3 text-white shadow-lg transition-all hover:scale-110"
+          className="fixed bottom-20 right-4 z-50 rounded-full bg-primary p-3 text-white shadow-lg transition-all hover:scale-110"
           aria-label="العودة للأعلى"
         >
           <ArrowUpCircle className="h-5 w-5" />
