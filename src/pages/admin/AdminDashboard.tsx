@@ -40,7 +40,7 @@ const cardStyles: { value: ProductCardStyle; label: string }[] = [
 ];
 const availabilityOptions: { value: ProductAvailability; label: string }[] = [
   { value: "available", label: "متوفر" },
-  { value: "limited", label: "محدود" },
+  { value: "limited", label: "كمية محدودة" },
   { value: "unavailable", label: "غير متوفر" },
 ];
 const sliderTransitions: { value: SliderTransition; label: string }[] = [

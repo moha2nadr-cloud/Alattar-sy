@@ -120,6 +120,6 @@ export function buildWhatsappUrl(productName: string, siteSettings = settings) {
 
 export const availabilityLabels: Record<ProductAvailability, string> = {
   available: "متوفر",
-  limited: "محدود",
+  limited: "كمية محدودة",
   unavailable: "غير متوفر",
 };
