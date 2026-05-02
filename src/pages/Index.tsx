@@ -80,6 +80,21 @@ export default function Index() {
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">{settings.aboutText}</p>
           </section>
         )}
+        {!settings.aboutText && (
+          <section className="mt-10 text-center text-primary animate-fade-up">
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
+          </section>
+        )}
+        {!settings.aboutText && (
+          <section className="mt-10 text-center text-primary animate-fade-up">
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
+          </section>
+        )}
+        {!settings.aboutText && (
+          <section className="mt-10 text-center text-primary animate-fade-up">
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">⚠️ إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
+          </section>
+        )}
 
         {/* شريط البحث */}
         <section className="mt-10 animate-fade-up">
@@ -110,13 +125,17 @@ export default function Index() {
             <h2 className="mb-5 text-2xl font-bold text-primary">{settings.categoriesTitle}</h2>
             <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <button type="button" onClick={() => setActiveCat(null)} className="shrink-0 rounded-full border border-primary px-5 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground" data-active={activeCat === null}>
-                الكل
+                الكل <span className="mr-1 opacity-60">({publishedProducts.length})</span>
               </button>
-              {categories.map((category) => (
-                <button key={category.id} type="button" onClick={() => setActiveCat(category.id)} className="shrink-0 rounded-full border border-primary px-5 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground" data-active={activeCat === category.id}>
-                  {category.name}
-                </button>
-              ))}
+              {categories.map((category) => {
+                const count = publishedProducts.filter((p) => p.categoryId === category.id).length;
+                if (count === 0) return null;
+                return (
+                  <button key={category.id} type="button" onClick={() => setActiveCat(category.id)} className="shrink-0 rounded-full border border-primary px-5 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10 data-[active=true]:bg-primary data-[active=true]:text-primary-foreground" data-active={activeCat === category.id}>
+                    {category.name} <span className="mr-1 opacity-60">({count})</span>
+                  </button>
+                );
+              })}
             </div>
           </section>
         )}
@@ -125,7 +144,7 @@ export default function Index() {
           <h2 className="mb-6 text-2xl font-bold text-primary">{settings.productsTitle}</h2>
           {filtered.length === 0 ? (
             <div className="rounded-[1.5rem] border-2 border-dashed border-primary/20 px-6 py-12 text-center text-lg text-primary">
-              {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : settings.emptyProductsMessage}
+              {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : "قم بتحديث الصفحة — الانترنت الخاص بك ضعيف"}
             </div>
           ) : (
             <div className={productLayoutClass}>
