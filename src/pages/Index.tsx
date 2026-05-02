@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Image as ImageIcon, Search, X, ArrowUpCircle, ArrowUpDown } from "lucide-react";
+import { Image as ImageIcon, Search, X, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SiteShell } from "@/components/herbal/SiteShell";
 import { availabilityLabels } from "@/data/herbalShop";
@@ -25,18 +25,11 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [availFilter, setAvailFilter] = useState<string>("all");
   const [sortOrder, setSortOrder] = useState<string>("default");
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const { config, loaded } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
   const visibleSlides = slides.filter((slide) => slide.published && slide.imageData);
-
-  useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 400);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const filtered = useMemo(() => {
     let list = publishedProducts.filter((p) => {
@@ -208,16 +201,6 @@ export default function Index() {
       </div>
 
       {/* زر العودة للأعلى */}
-      {showScrollTop && (
-        <button
-          type="button"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-20 right-4 z-50 rounded-full bg-primary p-3 text-white shadow-lg transition-all hover:scale-110"
-          aria-label="العودة للأعلى"
-        >
-          <ArrowUpCircle className="h-5 w-5" />
-        </button>
-      )}
     </SiteShell>
   );
 }
