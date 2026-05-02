@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Image as ImageIcon, Search, X } from "lucide-react";
+import { Image as ImageIcon, Search, X, ArrowUpCircle, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SiteShell } from "@/components/herbal/SiteShell";
 import { availabilityLabels } from "@/data/herbalShop";
@@ -23,17 +23,32 @@ export default function Index() {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [availFilter, setAvailFilter] = useState<string>("all");
+  const [sortOrder, setSortOrder] = useState<string>("default");
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const { config, loaded } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
   const visibleSlides = slides.filter((slide) => slide.published && slide.imageData);
 
-  const filtered = useMemo(() => publishedProducts.filter((p) => {
-    const matchCat = !activeCat || p.categoryId === activeCat;
-    const q = searchQuery.trim().toLowerCase();
-    const matchSearch = !q || p.name.toLowerCase().includes(q) || (p.description ?? "").toLowerCase().includes(q);
-    return matchCat && matchSearch;
-  }), [activeCat, publishedProducts, searchQuery]);
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const filtered = useMemo(() => {
+    let list = publishedProducts.filter((p) => {
+      const matchCat = !activeCat || p.categoryId === activeCat;
+      const q = searchQuery.trim().toLowerCase();
+      const matchSearch = !q || p.name.toLowerCase().includes(q) || (p.description ?? "").toLowerCase().includes(q);
+      const matchAvail = availFilter === "all" || (p.availability ?? "available") === availFilter;
+      return matchCat && matchSearch && matchAvail;
+    });
+    if (sortOrder === "alpha") list = [...list].sort((a, b) => a.name.localeCompare(b.name, "ar"));
+    if (sortOrder === "alpha-desc") list = [...list].sort((a, b) => b.name.localeCompare(a.name, "ar"));
+    return list;
+  }, [activeCat, publishedProducts, searchQuery, availFilter, sortOrder]);
 
   const productLayoutClass = productDisplayMode === "list" ? "grid grid-cols-1 gap-3" : productDisplayMode === "compact" ? "grid grid-cols-2 gap-2 md:grid-cols-5" : `grid gap-4 md:gap-5 ${gridCols[settings.desktopProductsPerRow] ?? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}`;
   const intervalMs = Math.max(1000, Number(settings.sliderInterval) || 3000);
@@ -85,16 +100,6 @@ export default function Index() {
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
           </section>
         )}
-        {!settings.aboutText && (
-          <section className="mt-10 text-center text-primary animate-fade-up">
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
-          </section>
-        )}
-        {!settings.aboutText && (
-          <section className="mt-10 text-center text-primary animate-fade-up">
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
-          </section>
-        )}
 
         {/* شريط البحث */}
         <section className="mt-10 animate-fade-up">
@@ -109,14 +114,31 @@ export default function Index() {
               className="w-full rounded-2xl border border-primary/20 bg-primary/5 py-3 pr-12 pl-10 text-sm text-primary placeholder:text-primary/40 outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all"
             />
             {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 hover:text-primary transition-colors"
-              >
+              <button type="button" onClick={() => setSearchQuery("")} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 hover:text-primary transition-colors">
                 <X className="h-4 w-4" />
               </button>
             )}
+          </div>
+        </section>
+
+        {/* فلتر التوفر + الترتيب */}
+        <section className="mt-4 flex flex-wrap gap-2 animate-fade-up">
+          <div className="flex gap-1 rounded-xl border border-primary/20 bg-primary/5 p-1">
+            {[["all","الكل"],["available","متوفر"],["limited","كمية محدودة"]].map(([val, label]) => (
+              <button key={val} type="button" onClick={() => setAvailFilter(val)}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-1 rounded-xl border border-primary/20 bg-primary/5 p-1">
+            <ArrowUpDown className="h-3 w-3 text-primary/50 mr-1" />
+            {[["default","الافتراضي"],["alpha","أ-ي"],["alpha-desc","ي-أ"]].map(([val, label]) => (
+              <button key={val} type="button" onClick={() => setSortOrder(val)}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                {label}
+              </button>
+            ))}
           </div>
         </section>
 
@@ -170,6 +192,18 @@ export default function Index() {
           )}
         </section>
       </div>
+
+      {/* زر العودة للأعلى */}
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-20 left-4 z-50 rounded-full bg-primary p-3 text-white shadow-lg transition-all hover:scale-110"
+          aria-label="العودة للأعلى"
+        >
+          <ArrowUpCircle className="h-5 w-5" />
+        </button>
+      )}
     </SiteShell>
   );
 }

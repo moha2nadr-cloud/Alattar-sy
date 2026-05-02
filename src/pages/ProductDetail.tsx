@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Image as ImageIcon } from "lucide-react";
+import { ArrowRight, Image as ImageIcon, Share2 } from "lucide-react";
 import { SiteShell } from "@/components/herbal/SiteShell";
 import { Button } from "@/components/ui/button";
 import { availabilityLabels, buildWhatsappUrl } from "@/data/herbalShop";
@@ -31,6 +31,17 @@ export default function ProductDetail() {
   const availability = product.availability ?? "available";
   const categoryName = categories.find((c) => c.id === product.categoryId)?.name;
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    const text = `${product.name} - ${settings.siteName}`;
+    if (navigator.share) {
+      await navigator.share({ title: text, url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("تم نسخ رابط المنتج");
+    }
+  };
+
   return (
     <SiteShell settings={settings}>
       <div className="mx-auto max-w-5xl px-5 pb-16 pt-2">
@@ -46,9 +57,15 @@ export default function ProductDetail() {
             )}
           </div>
           <div className="flex flex-col gap-4 text-primary">
-            <span className={`inline-flex w-fit items-center rounded-full border px-3 py-1 text-sm font-semibold ${availabilityClasses[availability]}`}>
-              {availabilityLabels[availability]}
-            </span>
+            <div className="flex items-center justify-between">
+              <span className={`inline-flex w-fit items-center rounded-full border px-3 py-1 text-sm font-semibold ${availabilityClasses[availability]}`}>
+                {availabilityLabels[availability]}
+              </span>
+              <button type="button" onClick={handleShare} className="flex items-center gap-2 rounded-xl border border-primary/20 px-3 py-1.5 text-sm text-primary/70 hover:bg-primary/5 transition-all">
+                <Share2 className="h-4 w-4" />
+                مشاركة
+              </button>
+            </div>
             <h1 className="text-3xl font-extrabold leading-tight">{product.name}</h1>
             {categoryName && <p className="text-sm text-primary/65">التصنيف: {categoryName}</p>}
             {(product.price || product.weight) && (
