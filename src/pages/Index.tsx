@@ -92,7 +92,7 @@ export default function Index() {
         )}
         {!settings.aboutText && (
           <section className="mt-10 text-center text-primary animate-fade-up">
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">⚠️ إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
           </section>
         )}
 
