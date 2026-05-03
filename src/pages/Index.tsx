@@ -96,7 +96,7 @@ export default function Index() {
         )}
 
         {/* شريط البحث + أيقونة الفلتر */}
-        <section className="mt-10 animate-fade-up">
+        <section className="mt-10 animate-fade-up" style={{position:"relative", zIndex: 100}}>
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 pointer-events-none" />
@@ -114,47 +114,49 @@ export default function Index() {
                 </button>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => setShowFilter((v) => !v)}
-              className={`shrink-0 rounded-2xl border px-4 flex items-center gap-2 text-sm font-semibold transition-all ${showFilter || availFilter !== "all" || sortOrder !== "default" ? "bg-primary text-white border-primary" : "border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"}`}
-            >
-              <ArrowUpDown className="h-4 w-4" />
-              تصفية
-            </button>
+            <div className="relative shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowFilter((v) => !v)}
+                className={`rounded-2xl border px-4 py-3 flex items-center gap-2 text-sm font-semibold transition-all ${showFilter || availFilter !== "all" || sortOrder !== "default" ? "bg-primary text-white border-primary" : "border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"}`}
+              >
+                <ArrowUpDown className="h-4 w-4" />
+                تصفية
+              </button>
+              {showFilter && (
+                <>
+                  <div className="fixed inset-0" style={{zIndex:98}} onClick={() => setShowFilter(false)} />
+                  <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-primary/15 shadow-2xl p-4" dir="rtl" style={{background:"#ffffff", zIndex:99}}>
+                    <p className="text-xs font-bold text-primary/50 mb-2">حسب التوفر</p>
+                    <div className="flex flex-col gap-1 mb-4">
+                      {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
+                        <button key={val} type="button" onClick={() => { setAvailFilter(val); setShowFilter(false); }}
+                          className={`rounded-xl px-3 py-2.5 text-sm text-right font-medium transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs font-bold text-primary/50 mb-2">الترتيب</p>
+                    <div className="flex flex-col gap-1 mb-4">
+                      {[["default","الافتراضي"],["alpha","أ — ي"],["alpha-desc","ي — أ"]].map(([val, label]) => (
+                        <button key={val} type="button" onClick={() => { setSortOrder(val); setShowFilter(false); }}
+                          className={`rounded-xl px-3 py-2.5 text-sm text-right font-medium transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <button type="button" onClick={() => setShowFilter(false)}
+                      className="w-full rounded-xl bg-primary py-2 text-sm font-bold text-white">
+                      تم
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </section>
 
-        {/* قائمة الفلتر المنسدلة */}
-        {showFilter && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setShowFilter(false)} />
-            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-72 rounded-2xl border border-primary/15 shadow-2xl p-4" dir="rtl" style={{background:"#ffffff"}}>
-              <p className="text-xs font-bold text-primary/50 mb-2">حسب التوفر</p>
-              <div className="flex flex-col gap-1 mb-4">
-                {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
-                  <button key={val} type="button" onClick={() => { setAvailFilter(val); }}
-                    className={`rounded-xl px-3 py-2.5 text-sm text-right font-medium transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs font-bold text-primary/50 mb-2">الترتيب</p>
-              <div className="flex flex-col gap-1 mb-4">
-                {[["default","الافتراضي"],["alpha","أ — ي"],["alpha-desc","ي — أ"]].map(([val, label]) => (
-                  <button key={val} type="button" onClick={() => { setSortOrder(val); }}
-                    className={`rounded-xl px-3 py-2.5 text-sm text-right font-medium transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <button type="button" onClick={() => setShowFilter(false)}
-                className="w-full rounded-xl bg-primary py-2 text-sm font-bold text-white">
-                تم
-              </button>
-            </div>
-          </>
-        )}
+
 
         {settings.showCategoriesSection && (
           <section className="mt-6 animate-fade-up">
