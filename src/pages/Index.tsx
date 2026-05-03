@@ -211,11 +211,25 @@ export default function Index() {
                 </div>
               ))}
             </div>
+          {filtered.length === 0 && !loaded ? (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 animate-pulse">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="overflow-hidden rounded-[1rem] border border-primary/10 bg-white">
+                  <div className="aspect-[4/3] w-full bg-primary/10" />
+                  <div className="space-y-2 p-4">
+                    <div className="h-4 w-3/4 rounded-2xl bg-primary/10" />
+                    <div className="h-3 w-1/2 rounded-2xl bg-primary/10" />
+                    <div className="mt-2 h-6 w-20 rounded-2xl bg-primary/10" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : filtered.length === 0 ? (
             <div className="rounded-[1.5rem] border-2 border-dashed border-primary/20 px-6 py-12 text-center text-lg text-primary">
-              {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : "قم بتحديث الصفحة — الانترنت الخاص بك ضعيف"}
+              {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : "لا توجد منتجات في هذا التصنيف"}
             </div>
-          ) : loaded ? (
+          ) : (
+            <div className={productLayoutClass}>
             <div className={productLayoutClass}>
               {filtered.map((product) => {
                 const availability = product.availability ?? "available";

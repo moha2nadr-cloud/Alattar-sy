@@ -43,6 +43,30 @@ export default function ProductDetail() {
     );
   }
 
+  if (!loaded) {
+    return (
+      <SiteShell settings={settings}>
+        <div className="mx-auto max-w-5xl px-5 pb-16 pt-4 animate-pulse">
+          <div className="mb-5 h-5 w-28 rounded-2xl bg-primary/10" />
+          <div className="grid gap-6 rounded-[1.5rem] border border-primary/10 bg-white p-5 md:grid-cols-2">
+            <div className="aspect-square w-full rounded-2xl bg-primary/10" />
+            <div className="flex flex-col gap-4 pt-2">
+              <div className="h-4 w-20 rounded-2xl bg-primary/10" />
+              <div className="h-9 w-3/4 rounded-2xl bg-primary/10" />
+              <div className="h-5 w-1/3 rounded-2xl bg-primary/10" />
+              <div className="mt-2 space-y-2">
+                <div className="h-3 w-full rounded-2xl bg-primary/10" />
+                <div className="h-3 w-full rounded-2xl bg-primary/10" />
+                <div className="h-3 w-2/3 rounded-2xl bg-primary/10" />
+              </div>
+              <div className="mt-4 h-12 w-full rounded-2xl bg-primary/10" />
+            </div>
+          </div>
+        </div>
+      </SiteShell>
+    );
+  }
+
   if (!product) {
     return (
       <SiteShell settings={settings}>
