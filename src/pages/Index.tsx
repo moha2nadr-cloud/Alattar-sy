@@ -126,29 +126,25 @@ export default function Index() {
               {showFilter && (
                 <>
                   <div className="fixed inset-0" style={{zIndex:98}} onClick={() => setShowFilter(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-48 rounded-2xl border border-primary/15 shadow-2xl p-3" dir="rtl" style={{background:"#ffffff", zIndex:99}}>
-                    <p className="text-xs font-bold text-primary/50 mb-2">حسب التوفر</p>
-                    <div className="flex flex-col gap-1 mb-4">
+                  <div className="absolute left-0 top-full mt-2 w-44 rounded-2xl border border-primary/15 shadow-2xl p-2" dir="rtl" style={{background:"#ffffff", zIndex:99}}>
+                    <p className="text-xs font-bold text-primary/50 mb-1 px-2">حسب التوفر</p>
+                    <div className="flex flex-col gap-0.5 mb-2">
                       {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
                         <button key={val} type="button" onClick={() => { setAvailFilter(val); setShowFilter(false); }}
-                          className={`rounded-xl px-3 py-2.5 text-sm text-right font-medium transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                          className={`rounded-lg px-3 py-1.5 text-xs text-right font-medium transition-all ${availFilter === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
                           {label}
                         </button>
                       ))}
                     </div>
-                    <p className="text-xs font-bold text-primary/50 mb-2">الترتيب</p>
-                    <div className="flex flex-col gap-1 mb-4">
+                    <p className="text-xs font-bold text-primary/50 mb-1 px-2">الترتيب</p>
+                    <div className="flex flex-col gap-0.5">
                       {[["default","الافتراضي"],["alpha","أ — ي"],["alpha-desc","ي — أ"]].map(([val, label]) => (
                         <button key={val} type="button" onClick={() => { setSortOrder(val); setShowFilter(false); }}
-                          className={`rounded-xl px-3 py-2.5 text-sm text-right font-medium transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
+                          className={`rounded-lg px-3 py-1.5 text-xs text-right font-medium transition-all ${sortOrder === val ? "bg-primary text-white" : "text-primary hover:bg-primary/10"}`}>
                           {label}
                         </button>
                       ))}
                     </div>
-                    <button type="button" onClick={() => setShowFilter(false)}
-                      className="w-full rounded-xl bg-primary py-2 text-sm font-bold text-white">
-                      تم
-                    </button>
                   </div>
                 </>
               )}
