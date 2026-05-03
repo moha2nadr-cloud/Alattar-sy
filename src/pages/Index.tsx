@@ -27,6 +27,11 @@ export default function Index() {
   const [sortOrder, setSortOrder] = useState<string>("default");
   const [showFilter, setShowFilter] = useState(false);
   const [fontSize, setFontSize] = useState(1);
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize * 16}px`;
+    return () => { document.documentElement.style.fontSize = ""; };
+  }, [fontSize]);
   const { config, loaded } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
@@ -59,7 +64,7 @@ export default function Index() {
 
   return (
     <SiteShell settings={settings}>
-      <div className="mx-auto max-w-6xl px-6 pb-16" style={{fontSize: `${fontSize}rem`}}>
+      <div className="mx-auto max-w-6xl px-6 pb-16">
         <div className="botanical-sprig botanical-sprig-left" aria-hidden />
         <div className="botanical-sprig botanical-sprig-right" aria-hidden />
 
@@ -99,9 +104,9 @@ export default function Index() {
         {/* شريط البحث + أيقونة الفلتر */}
         {/* أزرار تكبير الخط */}
         <div className="flex justify-end gap-1 mt-6">
-          <button type="button" onClick={() => setFontSize(f => Math.max(0.85, f - 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all"><ZoomOut className="h-3 w-3" />A-</button>
+          <button type="button" onClick={() => setFontSize(f => Math.max(0.85, f - 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all"><ZoomOut className="h-3 w-3" />تصغير</button>
           <button type="button" onClick={() => setFontSize(1)} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs text-primary/50 hover:bg-primary/10 transition-all">افتراضي</button>
-          <button type="button" onClick={() => setFontSize(f => Math.min(1.3, f + 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all">A+<ZoomIn className="h-3 w-3" /></button>
+          <button type="button" onClick={() => setFontSize(f => Math.min(1.3, f + 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all">تكبير<ZoomIn className="h-3 w-3" /></button>
         </div>
 
         <section className="mt-3 animate-fade-up" style={{position:"relative", zIndex: 100}}>
@@ -187,7 +192,7 @@ export default function Index() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-primary">{settings.productsTitle}</h2>
             {(searchQuery || availFilter !== "all") && (
-              <span className="text-sm text-primary/50 font-medium">{filtered.length} نتيجة</span>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary">{filtered.length} نتيجة</span>
             )}
           </div>
           {filtered.length === 0 ? (
