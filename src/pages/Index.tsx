@@ -103,10 +103,10 @@ export default function Index() {
 
         {/* شريط البحث + أيقونة الفلتر */}
         {/* أزرار تكبير الخط */}
-        <div className="flex justify-end gap-1 mt-6">
-          <button type="button" onClick={() => setFontSize(f => Math.max(0.85, f - 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all"><ZoomOut className="h-3 w-3" />تصغير</button>
+        <div className="flex justify-start gap-1 mt-6">
+          <button type="button" onClick={() => setFontSize(f => Math.max(0.85, f - 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all"><ZoomOut className="h-3 w-3" />تصغير الخط</button>
           <button type="button" onClick={() => setFontSize(1)} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs text-primary/50 hover:bg-primary/10 transition-all">افتراضي</button>
-          <button type="button" onClick={() => setFontSize(f => Math.min(1.3, f + 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all">تكبير<ZoomIn className="h-3 w-3" /></button>
+          <button type="button" onClick={() => setFontSize(f => Math.min(1.3, f + 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all">تكبير الخط<ZoomIn className="h-3 w-3" /></button>
         </div>
 
         <section className="mt-3 animate-fade-up" style={{position:"relative", zIndex: 100}}>
