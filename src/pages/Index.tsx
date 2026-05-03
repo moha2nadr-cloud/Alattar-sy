@@ -114,7 +114,7 @@ export default function Index() {
                 </button>
               )}
             </div>
-            <div className="relative">
+            <div className="relative" style={{zIndex: 1000}}>
               <button
                 type="button"
                 onClick={() => setShowFilter((v) => !v)}
@@ -124,7 +124,7 @@ export default function Index() {
                 تصفية
               </button>
               {showFilter && (
-                <div className="fixed z-[999] w-56 rounded-2xl border border-primary/15 bg-white shadow-lg p-3" dir="rtl" style={{top: "auto", right: "auto"}}>
+                <div className="absolute left-0 top-full mt-2 w-56 rounded-2xl border border-primary/15 bg-white shadow-xl p-3" dir="rtl" style={{zIndex: 1000}}>
                   <p className="text-xs font-bold text-primary/50 mb-2">حسب التوفر</p>
                   <div className="flex flex-col gap-1 mb-3">
                     {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
