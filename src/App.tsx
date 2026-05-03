@@ -18,6 +18,13 @@ const App = () => {
 
   return (
     <>
+      <style>{`
+        @keyframes pageIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .page-transition { animation: pageIn 0.25s ease; }
+      `}</style>
       {showSplash && <SplashScreen onDone={handleDone} />}
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
@@ -25,8 +32,8 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/" element={<div className="page-transition" key="/"><Index /></div>} />
+              <Route path="/product/:id" element={<div className="page-transition" key="product"><ProductDetail /></div>} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
