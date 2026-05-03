@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Image as ImageIcon, Search, X, ArrowUpDown } from "lucide-react";
+import { Image as ImageIcon, Search, X, ArrowUpDown, ZoomIn, ZoomOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SiteShell } from "@/components/herbal/SiteShell";
 import { availabilityLabels } from "@/data/herbalShop";
@@ -26,6 +26,7 @@ export default function Index() {
   const [availFilter, setAvailFilter] = useState<string>("all");
   const [sortOrder, setSortOrder] = useState<string>("default");
   const [showFilter, setShowFilter] = useState(false);
+  const [fontSize, setFontSize] = useState(1);
   const { config, loaded } = useShopConfig();
   const { categories, products, slides, settings, productDisplayMode } = config;
   const publishedProducts = products.filter((product) => product.published);
@@ -58,7 +59,7 @@ export default function Index() {
 
   return (
     <SiteShell settings={settings}>
-      <div className="mx-auto max-w-6xl px-6 pb-16">
+      <div className="mx-auto max-w-6xl px-6 pb-16" style={{fontSize: `${fontSize}rem`}}>
         <div className="botanical-sprig botanical-sprig-left" aria-hidden />
         <div className="botanical-sprig botanical-sprig-right" aria-hidden />
 
@@ -96,7 +97,14 @@ export default function Index() {
         )}
 
         {/* شريط البحث + أيقونة الفلتر */}
-        <section className="mt-10 animate-fade-up" style={{position:"relative", zIndex: 100}}>
+        {/* أزرار تكبير الخط */}
+        <div className="flex justify-end gap-1 mt-6">
+          <button type="button" onClick={() => setFontSize(f => Math.max(0.85, f - 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all"><ZoomOut className="h-3 w-3" />A-</button>
+          <button type="button" onClick={() => setFontSize(1)} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs text-primary/50 hover:bg-primary/10 transition-all">افتراضي</button>
+          <button type="button" onClick={() => setFontSize(f => Math.min(1.3, f + 0.1))} className="flex items-center gap-1 rounded-xl border border-primary/20 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-all">A+<ZoomIn className="h-3 w-3" /></button>
+        </div>
+
+        <section className="mt-3 animate-fade-up" style={{position:"relative", zIndex: 100}}>
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 pointer-events-none" />
@@ -176,7 +184,12 @@ export default function Index() {
         )}
 
         <section className="mt-10">
-          <h2 className="mb-6 text-2xl font-bold text-primary">{settings.productsTitle}</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-primary">{settings.productsTitle}</h2>
+            {(searchQuery || availFilter !== "all") && (
+              <span className="text-sm text-primary/50 font-medium">{filtered.length} نتيجة</span>
+            )}
+          </div>
           {filtered.length === 0 ? (
             <div className="rounded-[1.5rem] border-2 border-dashed border-primary/20 px-6 py-12 text-center text-lg text-primary">
               {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : "قم بتحديث الصفحة — الانترنت الخاص بك ضعيف"}
@@ -192,7 +205,7 @@ export default function Index() {
                     </div>
                     <div className="p-4 text-primary">
                       <h3 className="text-lg font-bold leading-tight">{product.name}</h3>
-                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-primary/70">{product.description}</p>
+                      <p className="mt-2 text-xs font-semibold text-primary/50 hover:text-primary transition-colors">عرض التفاصيل</p>
                       {(product.price || product.weight) && <p className="mt-2 text-sm font-bold text-accent">{product.price} {product.weight && `— ${product.weight}`}</p>}
                       <span className={`mt-3 inline-flex items-center rounded-xl border px-3 py-1.5 text-xs font-bold backdrop-blur-sm data-[mode=compact]:hidden ${availabilityClasses[availability]}`} data-mode={productDisplayMode}>
                         {availabilityLabels[availability]}

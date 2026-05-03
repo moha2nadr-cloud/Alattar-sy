@@ -4,6 +4,7 @@ import { SiteShell } from "@/components/herbal/SiteShell";
 import { Button } from "@/components/ui/button";
 import { availabilityLabels, buildWhatsappUrl } from "@/data/herbalShop";
 import { useShopConfig } from "@/hooks/useShopConfig";
+import { Image as ImageIcon } from "lucide-react";
 
 const availabilityClasses: Record<string, string> = {
   available: "bg-green-500/15 text-green-700 border-green-500/30",
@@ -16,6 +17,7 @@ export default function ProductDetail() {
   const { config } = useShopConfig();
   const { products, settings, categories } = config;
   const product = products.find((p) => p.id === id);
+  const suggested = products.filter((p) => p.published && p.id !== id && p.categoryId === product?.categoryId).slice(0, 4);
 
   if (!product) {
     return (
@@ -81,6 +83,25 @@ export default function ProductDetail() {
           </div>
         </article>
       </div>
+
+      {/* منتجات مقترحة */}
+      {suggested.length > 0 && (
+        <div className="mx-auto max-w-5xl px-5 pb-16 mt-2">
+          <h2 className="text-xl font-bold text-primary mb-4">منتجات من نفس التصنيف</h2>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {suggested.map((p) => (
+              <Link to={`/product/${p.id}`} key={p.id} className="block overflow-hidden rounded-[1rem] border border-primary/15 shadow-card-soft transition-all hover:-translate-y-1" style={{background:"#ffffff"}}>
+                <div className="aspect-square w-full overflow-hidden bg-primary/10 flex items-center justify-center">
+                  {p.imageData ? <img loading="lazy" decoding="async" src={p.imageData} alt={p.name} className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-primary/30" />}
+                </div>
+                <div className="p-3">
+                  <h3 className="text-sm font-bold text-primary leading-tight line-clamp-2">{p.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </SiteShell>
   );
 }
