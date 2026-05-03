@@ -4,7 +4,6 @@ import { SiteShell } from "@/components/herbal/SiteShell";
 import { Button } from "@/components/ui/button";
 import { availabilityLabels, buildWhatsappUrl } from "@/data/herbalShop";
 import { useShopConfig } from "@/hooks/useShopConfig";
-import { Image as ImageIcon } from "lucide-react";
 
 const availabilityClasses: Record<string, string> = {
   available: "bg-green-500/15 text-green-700 border-green-500/30",
