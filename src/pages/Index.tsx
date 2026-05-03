@@ -126,7 +126,7 @@ export default function Index() {
               {showFilter && (
                 <>
                   <div className="fixed inset-0" style={{zIndex:98}} onClick={() => setShowFilter(false)} />
-                  <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-primary/15 shadow-2xl p-4" dir="rtl" style={{background:"#ffffff", zIndex:99}}>
+                  <div className="absolute left-0 top-full mt-2 w-48 rounded-2xl border border-primary/15 shadow-2xl p-3" dir="rtl" style={{background:"#ffffff", zIndex:99}}>
                     <p className="text-xs font-bold text-primary/50 mb-2">حسب التوفر</p>
                     <div className="flex flex-col gap-1 mb-4">
                       {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
