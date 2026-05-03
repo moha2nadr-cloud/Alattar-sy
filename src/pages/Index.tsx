@@ -126,7 +126,8 @@ export default function Index() {
               {showFilter && (
                 <>
                   <div className="fixed inset-0" style={{zIndex:98}} onClick={() => setShowFilter(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-44 rounded-2xl border border-primary/15 shadow-2xl p-2" dir="rtl" style={{background:"#ffffff", zIndex:99}}>
+                  <div className="absolute left-0 top-full mt-2 w-44 rounded-2xl border border-primary/15 shadow-2xl p-2" dir="rtl" style={{background:"#ffffff", zIndex:99, animation:"dropDown 0.2s ease"}}>
+                    <style>{`@keyframes dropDown { from { opacity:0; transform:translateY(-8px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }`}</style>
                     <p className="text-xs font-bold text-primary/50 mb-1 px-2">حسب التوفر</p>
                     <div className="flex flex-col gap-0.5 mb-2">
                       {[["all","الكل"],["available","متوفر فقط"],["limited","كمية محدودة"]].map(([val, label]) => (
