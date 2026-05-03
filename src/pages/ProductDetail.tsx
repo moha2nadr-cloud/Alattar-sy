@@ -21,22 +21,8 @@ export default function ProductDetail() {
   if (!loaded) {
     return (
       <SiteShell settings={settings}>
-        <div className="mx-auto max-w-5xl px-5 pb-16 pt-2">
-          <div className="h-6 w-32 rounded-xl bg-primary/10 animate-pulse mb-6" />
-          <div className="grid gap-6 rounded-[1.5rem] border border-primary/10 bg-white p-5 md:grid-cols-2">
-            <div className="aspect-square w-full rounded-2xl bg-primary/10 animate-pulse" />
-            <div className="flex flex-col gap-4">
-              <div className="h-5 w-24 rounded-xl bg-primary/10 animate-pulse" />
-              <div className="h-10 w-3/4 rounded-xl bg-primary/10 animate-pulse" />
-              <div className="h-4 w-1/2 rounded-xl bg-primary/10 animate-pulse" />
-              <div className="space-y-2 mt-2">
-                <div className="h-3 w-full rounded-xl bg-primary/10 animate-pulse" />
-                <div className="h-3 w-full rounded-xl bg-primary/10 animate-pulse" />
-                <div className="h-3 w-2/3 rounded-xl bg-primary/10 animate-pulse" />
-              </div>
-              <div className="h-12 w-full rounded-2xl bg-primary/10 animate-pulse mt-4" />
-            </div>
-          </div>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="w-8 h-8 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
         </div>
       </SiteShell>
     );

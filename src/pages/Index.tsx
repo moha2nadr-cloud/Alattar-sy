@@ -95,14 +95,7 @@ export default function Index() {
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">{settings.aboutText}</p>
           </section>
         )}
-        {!loaded && (
-          <section className="mt-10 animate-fade-up">
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-5 w-48 rounded-xl bg-primary/10 animate-pulse" />
-              <div className="h-3 w-64 rounded-xl bg-primary/10 animate-pulse" />
-            </div>
-          </section>
-        )}
+
 
         {/* شريط البحث + أيقونة الفلتر */}
         {/* أزرار تكبير الخط */}
