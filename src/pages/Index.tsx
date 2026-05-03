@@ -96,8 +96,11 @@ export default function Index() {
           </section>
         )}
         {!loaded && (
-          <section className="mt-10 text-center text-primary animate-fade-up">
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-primary/75">إذا لم تظهر المنتجات، قم بتحديث الصفحة — الانترنت الخاص بك ضعيف</p>
+          <section className="mt-10 animate-fade-up">
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-5 w-48 rounded-xl bg-primary/10 animate-pulse" />
+              <div className="h-3 w-64 rounded-xl bg-primary/10 animate-pulse" />
+            </div>
           </section>
         )}
 
@@ -195,11 +198,24 @@ export default function Index() {
               <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary">{filtered.length} نتيجة</span>
             )}
           </div>
-          {filtered.length === 0 ? (
+          {filtered.length === 0 && !loaded ? (
+            <div className={productLayoutClass}>
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="rounded-[1rem] border border-primary/10 bg-white overflow-hidden">
+                  <div className="aspect-[4/3] w-full bg-primary/10 animate-pulse" />
+                  <div className="p-4 space-y-2">
+                    <div className="h-4 w-3/4 rounded-xl bg-primary/10 animate-pulse" />
+                    <div className="h-3 w-full rounded-xl bg-primary/10 animate-pulse" />
+                    <div className="h-6 w-16 rounded-xl bg-primary/10 animate-pulse mt-2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="rounded-[1.5rem] border-2 border-dashed border-primary/20 px-6 py-12 text-center text-lg text-primary">
               {searchQuery ? `لا توجد نتائج لـ "${searchQuery}"` : "قم بتحديث الصفحة — الانترنت الخاص بك ضعيف"}
             </div>
-          ) : (
+          ) : loaded ? (
             <div className={productLayoutClass}>
               {filtered.map((product) => {
                 const availability = product.availability ?? "available";
